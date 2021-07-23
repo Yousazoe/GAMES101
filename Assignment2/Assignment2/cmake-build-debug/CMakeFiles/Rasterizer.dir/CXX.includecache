@@ -1,0 +1,36 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cs18/Documents/share/pa2/Assignment2/Triangle.hpp
+eigen3/Eigen/Eigen
+-
+
+/home/cs18/Documents/share/pa2/Assignment2/global.hpp
+
+/home/cs18/Documents/share/pa2/Assignment2/rasterizer.cpp
+algorithm
+-
+vector
+-
+rasterizer.hpp
+/home/cs18/Documents/share/pa2/Assignment2/rasterizer.hpp
+opencv2/opencv.hpp
+-
+math.h
+-
+
+/home/cs18/Documents/share/pa2/Assignment2/rasterizer.hpp
+eigen3/Eigen/Eigen
+-
+algorithm
+-
+global.hpp
+/home/cs18/Documents/share/pa2/Assignment2/global.hpp
+Triangle.hpp
+/home/cs18/Documents/share/pa2/Assignment2/Triangle.hpp
+
