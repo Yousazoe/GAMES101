@@ -144,7 +144,7 @@ void rst::rasterizer::draw(rst::pos_buf_id pos_buffer, rst::ind_buf_id ind_buffe
     float f1 = (100 - 0.1) / 2.0;
     float f2 = (100 + 0.1) / 2.0;
 
-    Eigen::Matrix4f mvp = projection * view * model;
+    Eigen::Matrix4f mvp = projection * view * model * rodrigues;
     for (auto& i : ind)
     {
         Triangle t;
@@ -201,6 +201,11 @@ void rst::rasterizer::set_view(const Eigen::Matrix4f& v)
 void rst::rasterizer::set_projection(const Eigen::Matrix4f& p)
 {
     projection = p;
+}
+
+void rst::rasterizer::set_rodrigues(const Eigen::Matrix4f &r)
+{
+    rodrigues = r;
 }
 
 void rst::rasterizer::clear(rst::Buffers buff)

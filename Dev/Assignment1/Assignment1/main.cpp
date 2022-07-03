@@ -40,32 +40,36 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     return model;
 }
 
-Eigen::Matrix4f get_model_matrix(Vector3f axis,float rotation_angle)
+Eigen::Matrix4f get_rotation(Vector3f axis,float rotation_angle)
 {
-    Eigen::Matrix4f model = Eigen::Matrix4f::Identity();
+    Eigen::Matrix4f I, N;
+    Eigen::Matrix4f rodrigues = Eigen::Matrix4f::Identity();
 
     // TODO: Implement this function
     // Create the model matrix for rotating the triangle around the any axis.
     // Then return it.
 
+    Eigen::Vector4f n;
+    Eigen::RowVector4f nT;
     float angle = rotation_angle / 180.0 * MY_PI;
 
-    Eigen::Matrix3f tr;
-    Eigen::Matrix3f mul;
-    Eigen::Matrix3f tmp = Eigen::Matrix3f::Identity();
+    n  << axis.x(), axis.y(), axis.z(), 0;
+    nT << axis.x(), axis.y(), axis.z(), 0;
 
-    mul << 0, -axis[2], axis[1],
-           axis[2], 0, -axis[0],
-           -axis[0], axis[0], 0;
+    I << 1, 0, 0, 0,
+         0, 1, 0, 0,
+         0, 0, 1, 0,
+         0, 0, 0, 1;
 
-    tr = std::cos(angle) * tmp + (1 - std::cos(angle)) * axis * axis.adjoint() + std::sin(angle) * mul;
+    N <<   0,    -n.z(), n.y(), 0,
+          n.z(),   0,   -n.x(), 0,
+         -n.y(), n.x(),   0,    0,
+           0,     0,      0,    1;
 
-    model << tr(0,0), tr(0,1), tr(0,2),0,
-             tr(1,0), tr(1,1), tr(1,2),0,
-             tr(2,0), tr(2,1), tr(2,2),0,
-             0, 0, 0, 1;
 
-    return model;
+    rodrigues = std::cos(angle) * I + (1 - std::cos(angle)) * n * nT + std::sin(angle) * N;
+    rodrigues(3, 3) = 1;
+    return rodrigues;
 }
 
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
@@ -87,7 +91,8 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     float bot = -top;
     float left = top * aspect_ratio;
     float right = -left;
-
+    float near = -zNear;
+    float far = -zFar;
 
     Eigen::Matrix4f ortho = Eigen::Matrix4f::Identity();
     Eigen::Matrix4f trans(4,4);
@@ -95,25 +100,25 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
 
     trans << 2 / (right - left), 0, 0, 0,
              0, 2 / (top - bot), 0, 0,
-             0, 0, 2 / (zNear -zFar), 0,
+             0, 0, 2 / (near -far), 0,
              0, 0, 0, 1;
 
     scale << 1, 0, 0, -(right + left) / 2,
              0, 1, 0, -(top + bot) / 2,
-             0, 0, 1, -(zNear + zFar) / 2,
+             0, 0, 1, -(near + far) / 2,
              0, 0, 0, 1;
 
     ortho = trans * scale;
 
     // Matrix persp2ortho
 
-    float A = zNear + zFar;
-    float B = -zNear * zFar;
+    float A = near + far;
+    float B = -near * far;
 
     Eigen::Matrix4f persp2ortho = Eigen::Matrix4f::Identity();
 
-    persp2ortho << zNear, 0, 0, 0,
-                   0, zNear, 0, 0,
+    persp2ortho << near, 0, 0, 0,
+                   0, near, 0, 0,
                    0, 0, A, B,
                    0, 0, 1, 0;
 
@@ -128,10 +133,12 @@ int main(int argc, const char** argv)
 {
     float angle = 0;
     bool command_line = false;
-    Vector3f axis(1,0,0);
-    //Vector3f axis(0,1,0);
-    //Vector3f axis(0,0,1);
+
+    Vector3f axis(0,0,1);
     std::string filename = "output.png";
+
+    float angleR = 0, inputAngle = 0;
+    Eigen::Vector3f axisR(0,0,1);
 
     if (argc >= 3) {
         command_line = true;
@@ -171,13 +178,23 @@ int main(int argc, const char** argv)
         return 0;
     }
 
+
+    bool flagR = false;
+    std::cout << "Please enter the axis and angle: " << std::endl;
+    std::cin >> axisR.x() >> axisR.y() >> axisR.z() >> inputAngle;
+
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        //r.set_model(get_model_matrix(angle));
-        r.set_model(get_model_matrix(axis,angle));
+        r.set_model(get_model_matrix(angle));
+        // r.set_model(get_model_matrix(axis,angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
+
+        if (flagR)
+            r.set_rodrigues(get_rotation(axisR, angleR));
+        else
+            r.set_rodrigues(get_rotation(axis, 0));
 
         r.draw(pos_id, ind_id, rst::Primitive::Triangle);
 
@@ -193,6 +210,10 @@ int main(int argc, const char** argv)
         }
         else if (key == 'd') {
             angle -= 10;
+        }
+        else if (key == 'r') {
+            flagR = true;
+            angleR += inputAngle;
         }
     }
 
