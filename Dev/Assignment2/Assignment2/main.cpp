@@ -40,13 +40,14 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 
     // Matrix ortho
 
-    float angle = eye_fov / 180.0 * MY_PI;
+    float angle = eye_fov / 180.0f * MY_PI;
 
     float top = zNear * std::tan(angle / 2);
     float bot = -top;
     float left = top * aspect_ratio;
     float right = -left;
-
+    float near = -zNear;
+    float far = -zFar;
 
     Eigen::Matrix4f ortho = Eigen::Matrix4f::Identity();
     Eigen::Matrix4f trans(4,4);
@@ -54,25 +55,25 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
 
     trans << 2 / (right - left), 0, 0, 0,
             0, 2 / (top - bot), 0, 0,
-            0, 0, 2 / (zNear -zFar), 0,
+            0, 0, 2 / (near -far), 0,
             0, 0, 0, 1;
 
     scale << 1, 0, 0, -(right + left) / 2,
             0, 1, 0, -(top + bot) / 2,
-            0, 0, 1, -(zNear + zFar) / 2,
+            0, 0, 1, -(near + far) / 2,
             0, 0, 0, 1;
 
     ortho = trans * scale;
 
     // Matrix persp2ortho
 
-    float A = zNear + zFar;
-    float B = -zNear * zFar;
+    float A = near + far;
+    float B = -near * far;
 
     Eigen::Matrix4f persp2ortho = Eigen::Matrix4f::Identity();
 
-    persp2ortho << zNear, 0, 0, 0,
-            0, zNear, 0, 0,
+    persp2ortho << near, 0, 0, 0,
+            0, near, 0, 0,
             0, 0, A, B,
             0, 0, 1, 0;
 
@@ -80,7 +81,6 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float z
     // Matrix presp
     projection = ortho * persp2ortho;
 
-    return projection;
     return projection;
 }
 
