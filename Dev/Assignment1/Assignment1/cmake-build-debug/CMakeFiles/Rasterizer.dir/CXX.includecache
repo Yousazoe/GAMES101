@@ -11,8 +11,6 @@ eigen3/Eigen/Eigen
 -
 
 /home/cs18/Documents/share/pa1/Assignment1/main.cpp
-Triangle.hpp
-/home/cs18/Documents/share/pa1/Assignment1/Triangle.hpp
 rasterizer.hpp
 /home/cs18/Documents/share/pa1/Assignment1/rasterizer.hpp
 eigen3/Eigen/Eigen

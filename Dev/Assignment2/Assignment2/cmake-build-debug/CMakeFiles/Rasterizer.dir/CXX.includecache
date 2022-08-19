@@ -12,17 +12,15 @@ eigen3/Eigen/Eigen
 
 /home/cs18/Documents/share/pa2/Assignment2/global.hpp
 
-/home/cs18/Documents/share/pa2/Assignment2/rasterizer.cpp
-algorithm
+/home/cs18/Documents/share/pa2/Assignment2/main.cpp
+iostream
 -
-vector
+opencv2/opencv.hpp
 -
 rasterizer.hpp
 /home/cs18/Documents/share/pa2/Assignment2/rasterizer.hpp
-opencv2/opencv.hpp
--
-math.h
--
+Triangle.hpp
+/home/cs18/Documents/share/pa2/Assignment2/Triangle.hpp
 
 /home/cs18/Documents/share/pa2/Assignment2/rasterizer.hpp
 eigen3/Eigen/Eigen

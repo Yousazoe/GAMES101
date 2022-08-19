@@ -5,9 +5,9 @@
 
 #include <algorithm>
 #include <vector>
+#include <cmath>
 #include "rasterizer.hpp"
 #include <opencv2/opencv.hpp>
-#include <math.h>
 
 
 rst::pos_buf_id rst::rasterizer::load_positions(const std::vector<Eigen::Vector3f> &positions)
@@ -40,12 +40,12 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
 }
 
 
-static bool insideTriangle(int x, int y, const Vector3f* _v)
+static bool insideTriangle(float x, float y, const Vector3f* _v)
 {   
     // TODO : Implement this function to check if the point (x, y) is inside the triangle represented by _v[0], _v[1], _v[2]
 
     Eigen::Vector3f Q;
-    Q << float(x), float(y), 1;
+    Q << x, y, 1;
     Vector3f v[3];
     for (int i = 0; i < 3; ++i) {
         v[i] << _v[i].x(), _v[i].y(), 1;
@@ -98,16 +98,16 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
         //Viewport transformation
         for (auto & vert : v)
         {
-            vert.x() = 0.5*width*(vert.x()+1.0);
-            vert.y() = 0.5*height*(vert.y()+1.0);
+            vert.x() = 0.5f * (float)width * (vert.x() + 1.0f);
+            vert.y() = 0.5f * (float)height * (vert.y() + 1.0f);
             vert.z() = vert.z() * f1 + f2;
         }
 
-        for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
         {
-            t.setVertex(i, v[i].head<3>());
-            t.setVertex(i, v[i].head<3>());
-            t.setVertex(i, v[i].head<3>());
+            t.setVertex(j, v[j].head<3>());
+            t.setVertex(j, v[j].head<3>());
+            t.setVertex(j, v[j].head<3>());
         }
 
         auto col_x = col[i[0]];
@@ -234,15 +234,14 @@ rst::rasterizer::rasterizer(int w, int h) : width(w), height(h)
 
 int rst::rasterizer::get_index(int x, int y)
 {
-    return (height-1-y)*width + x;
+    return (height - 1 - y) * width + x;
 }
 
 void rst::rasterizer::set_pixel(const Eigen::Vector3f& point, const Eigen::Vector3f& color)
 {
     //old index: auto ind = point.y() + point.x() * width;
-    auto ind = (height-1-point.y())*width + point.x();
-    frame_buf[ind] = color;
-
+    auto ind = (height- 1 - point.y()) * width + point.x();
+    frame_buf[static_cast<unsigned long>(ind)] = color;
 }
 
 // clang-format on
