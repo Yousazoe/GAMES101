@@ -21,9 +21,12 @@
 + [Light Transport & Global Illumination](https://www.yousazoe.top/archives/ad809f54.html)
 
 
++ [GAMES101-SUM](https://www.yousazoe.top/archives/692c2b09.html)
+
 
 ### 实验部分
 
 + [虚拟机的使用](https://www.yousazoe.top/archives/78f45d1.html)
 + [旋转与投影](https://www.yousazoe.top/archives/1ecca1be.html)
++ [三角形光栅化](https://www.yousazoe.top/archives/7d20819.html)
 
