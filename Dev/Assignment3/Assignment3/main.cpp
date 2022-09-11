@@ -259,9 +259,9 @@ Eigen::Vector3f displacement_fragment_shader(const fragment_shader_payload& payl
     Eigen::Vector3f t = {x * y / sqrt(x * x + z * z), sqrt(x * x + z * z), z * y / sqrt(x * x + z * z)};
     Eigen::Vector3f b = n.cross(t);
     Eigen::Matrix3f TBN;
-    TBN << t.x(), t.y(), t.z(),
-           b.x(), b.y(), b.z(),
-           n.x(), n.y(), n.z();
+    TBN << t.x(), b.x(), n.x(),
+           t.y(), b.y(), n.y(),
+           t.z(), b.z(), n.z();
 
     // dU = kh * kn * (h(u+1/w,v)-h(u,v))
     // dV = kh * kn * (h(u,v+1/h)-h(u,v))
@@ -340,9 +340,9 @@ Eigen::Vector3f bump_fragment_shader(const fragment_shader_payload& payload)
     Eigen::Vector3f t = {x * y / sqrt(x * x + z * z), sqrt(x * x + z * z), z * y / sqrt(x * x + z * z)};
     Eigen::Vector3f b = n.cross(t);
     Eigen::Matrix3f TBN;
-    TBN << t.x(), t.y(), t.z(),
-           b.x(), b.y(), b.z(),
-           n.x(), n.y(), n.z();
+    TBN << t.x(), b.x(), n.x(),
+           t.y(), b.y(), n.y(),
+           t.z(), b.z(), n.z();
 
     // dU = kh * kn * (h(u+1/w,v)-h(u,v))
     // dV = kh * kn * (h(u,v+1/h)-h(u,v))
