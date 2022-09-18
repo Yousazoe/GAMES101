@@ -1,0 +1,3 @@
+/home/cs18/Documents/share/Assignment4/Assignment4/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/cs18/Documents/share/Assignment4/Assignment4/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/cs18/Documents/share/Assignment4/Assignment4/cmake-build-debug/CMakeFiles/BezierCurve.dir
